@@ -9,6 +9,15 @@
 <h1 class="font-bold text-xl mb-6 pb-2 border-b-2">
   Your Pragmatic Catalog
 </h1>
+<<<<<<< Updated upstream
+=======
+<p>
+  <% if (@session_counter > 5) %>
+    <%= "You've been here #{@session_counter} times without updating your cart!" %>
+  <% end %>
+</p>
+<%= turbo_stream_from 'products' %>
+>>>>>>> Stashed changes
 
 <ul>
   <% cache @products do %>
