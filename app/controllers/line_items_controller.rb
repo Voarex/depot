@@ -24,11 +24,14 @@ class LineItemsController < ApplicationController
   # POST /line_items or /line_items.json
   def create
     product = Product.find(params[:product_id])
+    reset_session
+
     @line_item = @cart.add_product(product)
 
     respond_to do |format|
       if @line_item.save
-        format.html { redirect_to cart_url(@line_item.cart) }
+        format.turbo_stream { @current_item = @line_item }
+        format.html { redirect_to store_index_url }
         format.json { render :show, status: :created, location: @line_item }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -64,6 +67,11 @@ class LineItemsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_line_item
       @line_item = LineItem.find(params[:id])
+    end
+
+    # Resets session if user adds item to cart
+    def reset_counter
+      session[:counter] = 0
     end
 
     # Only allow a list of trusted parameters through.
