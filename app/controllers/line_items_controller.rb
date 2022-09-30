@@ -24,7 +24,7 @@ class LineItemsController < ApplicationController
   # POST /line_items or /line_items.json
   def create
     product = Product.find(params[:product_id])
-    reset_session
+    reset_session_counter
 
     @line_item = @cart.add_product(product)
 
@@ -70,7 +70,7 @@ class LineItemsController < ApplicationController
     end
 
     # Resets session if user adds item to cart
-    def reset_counter
+    def reset_session_counter
       session[:counter] = 0
     end
 
