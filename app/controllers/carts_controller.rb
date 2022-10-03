@@ -61,7 +61,7 @@ class CartsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_cart
-      @cart = Cart.find(params[:id])
+      @cart = Cart.find(session[:cart_id])
     end
 
     # Only allow a list of trusted parameters through.
@@ -70,7 +70,7 @@ class CartsController < ApplicationController
     end
 
     def invalid_cart
-      logger.error "Attempt to access invalid cart #{params[:id]}"
+      logger.error "Attempt to access invalid cart #{session[:cart_id]}"
       redirect_to store_index_url, notice: 'Invalid cart'
     end
 end
