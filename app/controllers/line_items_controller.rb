@@ -1,7 +1,7 @@
 class LineItemsController < ApplicationController
   include CurrentCart
-  before_action :set_cart, only: %i[ create ]
-  before_action :set_line_item, only: %i[ show edit update destroy ]
+  before_action :set_cart, only: %i[ create destroy ]
+  before_action :set_line_item, only: %i[ show edit update ]
 
   # GET /line_items or /line_items.json
   def index
@@ -25,12 +25,12 @@ class LineItemsController < ApplicationController
   def create
     product = Product.find(params[:product_id])
     reset_session_counter
-
+  
     @line_item = @cart.add_product(product)
 
     respond_to do |format|
       if @line_item.save
-        format.turbo_stream { @current_item = @line_item }
+        format.turbo_stream { @current_item = @line_item, @notice = "Line item was successfully added to Cart." }
         format.html { redirect_to store_index_url }
         format.json { render :show, status: :created, location: @line_item }
       else
@@ -55,11 +55,20 @@ class LineItemsController < ApplicationController
 
   # DELETE /line_items/1 or /line_items/1.json
   def destroy
-    @line_item.destroy
+    product = Product.find(params[:product_id])
+    @line_item = @cart.delete_product(product)
 
     respond_to do |format|
-      format.html { redirect_to store_index_url, notice: "Line item was successfully destroyed." }
-      format.json { head :no_content }
+      if @line_item != nil && @line_item.save
+        format.turbo_stream { @current_item = @line_item, @notice = "Product was successfully updated" }
+        format.html { redirect_to store_index_url }
+        format.json { head :no_content }
+        @cart.broadcast_replace
+      else
+        format.turbo_stream { @notice = "Product was successfully deleted" }
+        format.html { redirect_to store_index_url }
+        format.json { head :no_content }
+      end
     end
   end
 
@@ -69,7 +78,7 @@ class LineItemsController < ApplicationController
       @line_item = LineItem.find(params[:id])
     end
 
-    # Resets session if user adds item to cart
+    # Resets session counter if user adds item to cart
     def reset_session_counter
       session[:counter] = 0
     end
