@@ -13,7 +13,7 @@
   </td>
     <td class="text-center font-thin">
     
-    <%= button_to line_item, method: :delete do %>
+    <%= button_to line_item, params: [product_id: line_item.product], method: :delete do %>
       <i class="fa-solid fa-trash"></i>
     <% end %>
   </td>
