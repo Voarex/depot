@@ -1,26 +1,24 @@
 require "test_helper"
 
 class CartTest < ActiveSupport::TestCase
-  test `duplicates must not be saved as a new line item` destroy
-    # create cart and add one product
-    cart = new_cart_with_one_product(:ruby)
-    assert cart.save
-    assert_equal 1, cart.line_items.count
-    assert_equal 1, cart.line_items.find_by( product_id: products(:ruby).id).quantity
-    assert_equal 49.50, cart.total_price.to_f
-    # --------------------------------------------------------------
+ def setup
+  @cart = Cart.create
+  @book_one = products(:ruby)
+  @book_two = products(:two)
+ end
 
+ test "add unique products" do
+  @cart.add_product(@book_one).save!
+  @cart.add_product(@book_two).save!
+  assert_equal 2, @cart.line_items.size
+  assert_equal @book_one.price + @book_two.price, @cart.total_price
+ end
 
-    # create a second (actually the same product) and add it to cart:
-    item = products(:ruby)
-
-    # the following two lines do the trick:
-    cart.add_product(item.id, item.price).save
-    cart.reload
-
-    assert_equal 1, cart.line_items.count, `duplicate saves as new line`
-    assert_equal 2, cart.line_items.find_by(product_id: item.id).quantity,
-           `quantity has not been increased`
-    assert_equal 99.00, cart.total_price.to_f, `total price is wrong`
-  end
+ test "add duplicate product" do
+  @cart.add_product(@book_one).save!
+  @cart.add_product(@book_one).save!
+  assert_equal 2*@book_one.price, @cart.total_price
+  assert_equal 1, @cart.line_items.size
+  assert_equal 2, @cart.line_items[0].quantity
+ end
 end

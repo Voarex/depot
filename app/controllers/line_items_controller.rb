@@ -30,8 +30,8 @@ class LineItemsController < ApplicationController
 
     respond_to do |format|
       if @line_item.save
-        format.turbo_stream { @current_item = @line_item, @notice = "Line item was successfully added to Cart." }
-        format.html { redirect_to store_index_url }
+        format.turbo_stream { @current_item = @line_item; @notice = "Product was successfully added" }
+        format.html { redirect_to store_index_url}
         format.json { render :show, status: :created, location: @line_item }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -44,7 +44,8 @@ class LineItemsController < ApplicationController
   def update
     respond_to do |format|
       if @line_item.update(line_item_params)
-        format.html { redirect_to line_item_url(@line_item), notice: "Line item was successfully updated." }
+        format.turbo_stream { @current_item = @line_item }
+        format.html { redirect_to line_item_url(@line_item) }
         format.json { render :show, status: :ok, location: @line_item }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -60,10 +61,10 @@ class LineItemsController < ApplicationController
 
     respond_to do |format|
       if @line_item != nil && @line_item.save
-        format.turbo_stream { @current_item = @line_item, @notice = "Product was successfully updated" }
+        format.turbo_stream { @current_item = @line_item; @notice = "Product was successfully updated" }
         format.html { redirect_to store_index_url }
         format.json { head :no_content }
-        @cart.broadcast_replace
+
       else
         format.turbo_stream { @notice = "Product was successfully deleted" }
         format.html { redirect_to store_index_url }
