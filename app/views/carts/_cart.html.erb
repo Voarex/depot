@@ -18,7 +18,11 @@
       class: 'ml-4 rounded-lg py-1 px-2 text-white bg-green-600',
         data: { turbo_method: :delete } %>
 
-    <%= button_to 'Checkout', new_order_path, method: :get,
-      class: 'ml-4 rounded-lg py-1 px-2 text-black bg-green-200' %>
+    <% if request.fullpath == "/orders/new"  %>
+    <% else %>
+      <%= button_to 'Checkout', new_order_path, method: :get,
+        class: 'ml-4 rounded-lg py-1 px-2 text-black bg-green-200' %>
+    <% end %>
+    
   </div>
 </div>

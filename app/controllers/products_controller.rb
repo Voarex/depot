@@ -51,6 +51,20 @@ class ProductsController < ApplicationController
     end
   end
 
+  # Created who_bought method with Atom Feeds
+  def who_bought
+    @product = Product.find(params[:id])
+    @latest_order = @product.orders.order(:updated_at).last
+    if stale?(@latest_order)
+      respond_to do |format|
+        format.atom
+        format.html
+        format.json { render :who_bought, status: :ok, location: @product }
+        format.xml 
+      end
+    end
+  end
+
   # DELETE /products/1 or /products/1.json
   def destroy
     @product.destroy

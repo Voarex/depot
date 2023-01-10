@@ -3,6 +3,7 @@ class OrdersController < ApplicationController
     before_action :set_cart, only: %i[ new create ]
     before_action :ensure_cart_isnt_empty, only: %i[ new ]
     before_action :set_order, only: %i[ show edit update destroy ]
+    before_action :set_payment_types, only: %i[ show edit new create ]
 
   # GET /orders or /orders.json
   def index
@@ -80,5 +81,10 @@ class OrdersController < ApplicationController
     # Only allow a list of trusted parameters through.
     def order_params
       params.require(:order).permit(:name, :address, :email, :pay_type)
+    end
+
+    # Set Payment Types
+    def set_payment_types
+      @payment_types = PayType.all
     end
 end
