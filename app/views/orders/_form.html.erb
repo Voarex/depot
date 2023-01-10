@@ -29,11 +29,12 @@
   <div data-controller="payment">
     <div class="my-5">
       <%= form.label :pay_type %>
-      <%= form.select :pay_type, Order.pay_types.keys,
-                      { prompt: 'Select a pyment method' },
+      <% options = options_from_collection_for_select(@payment_types, 'id', 'name') %>
+      <%= form.select :pay_type, options,
+                      { prompt: 'Select a payment method' },
                       'data-payment-target' => 'selection',
                       'data-action' => 'payment#showAdditionalFields',
-                      class: "input-fields" %>
+                      class: "input-field" %>
    </div>
 
    <%= render partial: 'check', locals: {form: form} %>

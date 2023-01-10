@@ -1,4 +1,5 @@
 Product.delete_all
+PayType.delete_all
 Product.create!(title: 'Docker for Rails Developers',
   description:
     %{<p>
@@ -48,3 +49,7 @@ Product.create!(title: 'Modern CSS with Tailwind',
       </p>},
   image_url: 'tailwind.jpg',
   price: 18.95)
+
+PayType.create!(name: "Check")
+PayType.create!(name: "Credit Card")
+PayType.create!(name: "Purchase Order")

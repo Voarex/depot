@@ -1,0 +1,62 @@
+<div class="w-full">
+  <% if notice.present? %>
+    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium 
+              rounded-lg inline-block" id="notice">
+      <%= notice %>
+    </p>
+  <% end %>
+
+  <div class="flex justify-between items-center pb-8">
+    <h1 class="mx-auto font-bold text-4xl">Who bought <%= @product.title %></h1>
+  </div>
+
+  <div class="flex justify-between items-center pb-8">
+    <h2 class="mx-auto font-bold text-2xl">Last Updated: <%= @latest_order.try(:updated_at) %></h2>
+  </div>
+
+  <% @product.orders.each do |order| %>
+    <div>
+      <h3 class="mx-auto font-bold text-xl">
+        Order: <%= order.id %>
+      </h3>
+    </div>
+    <div>
+      <h3 class="mx-auto text-l">
+        Shipped to: <%= order.address %>
+      </h3>
+    </div>
+
+    <table id="who_bought" class="mx-auto">
+      <tbody>
+        <tr>
+          <th class="w-32 lg:w-72">Product</th>
+          <th class="w-16 lg:w-32">Quantity</th>
+          <th class="w-16 lg:w-32">Total Price</th>
+        </tr>
+        
+        <% order.line_items.each do |item| %>
+          <tr class="<%= cycle('bg-green-50', 'bg-white') %>">
+            <td><%= item.product.title %></td>
+            <td class="flex justify-between text-lg"><%= item.quantity %></td>
+            <td><%= number_to_currency item.total_price %></td>
+          </tr>
+        <% end %>
+
+        <tr>
+          <th colspan="2">Total</th>
+          <th> <%= number_to_currency order.line_items.map(&:total_price).sum %></th>
+        </tr>
+      </tbody>
+    </table>
+
+    <div>
+      Paid By: <%= order.pay_type %>
+    </div>
+    <div>
+      Name: <%= order.name %>
+    </div>
+    <div>
+      Email: <%= order.email %>
+    </div>
+  <% end %>
+</div>

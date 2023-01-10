@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 // Connects to data-controller="payment"
 export default class extends Controller {
-  static targets = [ "selection", "additionalFields "]
+  static targets = [ "selection", "additionalFields" ]
 
   initialize() {
     this.showAdditionalFields()
@@ -11,7 +11,7 @@ export default class extends Controller {
   showAdditionalFields() {
     let selection = this.selectionTarget.value
 
-    for (let fields of this.additionalFieldsTarget) {
+    for (let fields of this.additionalFieldsTargets) {
       fields.disabled = fields.hidden = (fields.dataset.type != selection)
     }
   }
