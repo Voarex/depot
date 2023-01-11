@@ -1,4 +1,4 @@
-<fieldset data-payment-target="additionalFields" data-type="2">
+<fieldset data-payment-target="additionalFields" data-type="<%= @payment_types.where(name: "Credit Card").first.id %>">
   <div class="my-5">
     <%= form.label :credit_card_number %>
     <%= form.password_field :credit_card_number, class: "input-field" %>
