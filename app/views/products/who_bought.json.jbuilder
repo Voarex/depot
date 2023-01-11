@@ -9,7 +9,7 @@ json.array! @product.orders do |order|
 
     json.id order.id
     json.grand_total number_to_currency order.line_items.map(&:total_price).sum
-    json.pay_type order.pay_type
+    json.pay_type order.payment_type
 
     json.items order.line_items do |item|
       json.product item.product.title

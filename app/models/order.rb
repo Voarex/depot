@@ -16,4 +16,8 @@ class Order < ApplicationRecord
       line_items << item
     end
   end
+
+  def payment_type
+    PayType.where(id: pay_type).first.try(:name)
+  end
 end
